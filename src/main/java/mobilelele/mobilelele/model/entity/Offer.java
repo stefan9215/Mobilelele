@@ -11,8 +11,7 @@ import java.math.BigDecimal;
 @Table(name = "offers")
 public class Offer extends BaseEntity {
 
-    @Column(nullable = false)
-    @Type(type = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private Engine engine;
