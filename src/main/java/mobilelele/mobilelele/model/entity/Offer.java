@@ -2,6 +2,7 @@ package mobilelele.mobilelele.model.entity;
 
 import mobilelele.mobilelele.model.entity.enums.Engine;
 import mobilelele.mobilelele.model.entity.enums.Transmission;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,7 +11,8 @@ import java.math.BigDecimal;
 @Table(name = "offers")
 public class Offer extends BaseEntity {
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false)
+    @Type(type = "TEXT")
     private String description;
     @Enumerated(EnumType.STRING)
     private Engine engine;
