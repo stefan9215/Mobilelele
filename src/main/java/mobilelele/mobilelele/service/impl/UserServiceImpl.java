@@ -3,6 +3,7 @@ package mobilelele.mobilelele.service.impl;
 import mobilelele.mobilelele.model.entity.User;
 import mobilelele.mobilelele.model.entity.UserRole;
 import mobilelele.mobilelele.model.entity.enums.Role;
+import mobilelele.mobilelele.model.service.UserServiceModel;
 import mobilelele.mobilelele.repository.UserRepository;
 import mobilelele.mobilelele.repository.UserRoleRepository;
 import mobilelele.mobilelele.service.UserService;
@@ -29,6 +30,13 @@ public class UserServiceImpl implements UserService {
     public void initializeUsersAndRoles() {
         initializeRoles();
         initializeUsers();
+    }
+
+    @Override
+    public boolean login(UserServiceModel userServiceModel) {
+        Optional<User> user = userRepository.findByUsername(userServiceModel.getUsername());
+
+        return user.isPresent();
     }
 
     private void initializeUsers() {
