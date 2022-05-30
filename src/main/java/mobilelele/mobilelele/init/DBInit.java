@@ -23,6 +23,6 @@ public class DBInit implements CommandLineRunner {
     public void run(String... args) throws Exception {
         brandService.initializeBrands();
         modelService.initializeModels();
-        userService.initializeUsers();
+        userService.initializeUsersAndRoles();
     }
 }

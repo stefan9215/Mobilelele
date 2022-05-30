@@ -21,7 +21,7 @@ public class User extends BaseEntity{
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
     @ManyToMany
-    private List<UserRole> role;
+    private List<UserRole> roles;
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -70,12 +70,12 @@ public class User extends BaseEntity{
         return this;
     }
 
-    public List<UserRole> getRole() {
-        return role;
+    public List<UserRole> getRoles() {
+        return roles;
     }
 
-    public User setRole(List<UserRole> role) {
-        this.role = role;
+    public User setRoles(List<UserRole> role) {
+        this.roles = role;
         return this;
     }
 
@@ -85,6 +85,11 @@ public class User extends BaseEntity{
 
     public User setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public User addRole(UserRole userRole) {
+        this.roles.add(userRole);
         return this;
     }
 }

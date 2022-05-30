@@ -4,45 +4,68 @@ import mobilelele.mobilelele.model.entity.User;
 import mobilelele.mobilelele.model.entity.UserRole;
 import mobilelele.mobilelele.model.entity.enums.Role;
 import mobilelele.mobilelele.repository.UserRepository;
+import mobilelele.mobilelele.repository.UserRoleRepository;
 import mobilelele.mobilelele.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void initializeUsers() {
+    public void initializeUsersAndRoles() {
+        initializeRoles();
+        initializeUsers();
+    }
+
+    private void initializeUsers() {
 
         if (userRepository.count() == 0) {
-            UserRole userRole = new UserRole();
+            Optional<UserRole> adminRole = userRoleRepository.findByRole(Role.ADMIN);
+            Optional<UserRole> userRole = userRoleRepository.findByRole(Role.USER);
+
             User admin = new User()
                     .setUsername("admin")
-                    .setFirstName("admin")
-                    .setLastName("adminov")
-                    .setPassword(passwordEncoder.encode("123456"))
+                    .setPassword(passwordEncoder.encode("admin"))
+                    .setFirstName("Admin")
+                    .setLastName("Adminov")
                     .setActive(true)
-                    .setRole(List.of(userRole.setRole(Role.ADMIN), userRole.setRole(Role.USER)));
+                    .setRoles(List.of(adminRole.get(), userRole.get()));
 
             User pesho = new User()
                     .setUsername("pesho")
-                    .setFirstName("Peter")
-                    .setLastName("Petrov")
-                    .setPassword(passwordEncoder.encode("123456"))
+                    .setPassword(passwordEncoder.encode("pesho"))
+                    .setFirstName("Pesho")
+                    .setLastName("Peshov")
                     .setActive(true)
-                    .setRole(List.of(userRole.setRole(Role.USER)));
+                    .setRoles(List.of(userRole.get()));
 
             userRepository.saveAll(List.of(admin, pesho));
+        }
+    }
+
+    private void initializeRoles() {
+        if (userRoleRepository.count() == 0) {
+            UserRole adminRole = new UserRole()
+                    .setRole(Role.ADMIN);
+
+            UserRole userRole = new UserRole()
+                    .setRole(Role.USER);
+
+            userRoleRepository.saveAll(List.of(adminRole, userRole));
         }
     }
 }
