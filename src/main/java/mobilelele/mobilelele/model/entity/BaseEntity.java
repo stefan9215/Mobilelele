@@ -10,8 +10,8 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private LocalDateTime created;
-    private LocalDateTime modified;
+    private LocalDateTime createdOn;
+    private LocalDateTime modifiedOn;
 
     public Long getId() {
         return id;
@@ -22,21 +22,26 @@ public abstract class BaseEntity {
         return this;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public BaseEntity setCreated(LocalDateTime created) {
-        this.created = created;
+    public BaseEntity setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
         return this;
     }
 
-    public LocalDateTime getModified() {
-        return modified;
+    public LocalDateTime getModifiedOn() {
+        return modifiedOn;
     }
 
-    public BaseEntity setModified(LocalDateTime modified) {
-        this.modified = modified;
+    public BaseEntity setModifiedOn(LocalDateTime modified) {
+        this.modifiedOn = modified;
         return this;
+    }
+
+    @PrePersist
+    public void beforeCreate() {
+        setCreatedOn(LocalDateTime.now());
     }
 }
