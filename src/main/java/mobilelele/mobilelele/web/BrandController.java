@@ -27,7 +27,7 @@ public class BrandController {
 
         List<BrandViewModel> allBrands = brandService.getAllBrands();
 
-        modelAndView.addObject("brands",allBrands);
+        modelAndView.addObject("brands", allBrands);
         modelAndView.setViewName("brands");
 
         return modelAndView;

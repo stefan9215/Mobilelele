@@ -20,6 +20,8 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.7.1'
+
 }
 
 tasks.named('test') {
