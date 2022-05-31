@@ -1,16 +1,13 @@
 package mobilelele.mobilelele.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity{
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
     private String password;
@@ -20,7 +17,7 @@ public class User extends BaseEntity{
     private String lastName;
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<UserRole> roles;
     @Column(name = "image_url")
     private String imageUrl;
