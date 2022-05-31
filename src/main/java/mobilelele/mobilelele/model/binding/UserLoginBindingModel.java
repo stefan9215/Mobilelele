@@ -1,6 +1,6 @@
 package mobilelele.mobilelele.model.binding;
 
-public class UserBindingModel {
+public class UserLoginBindingModel {
 
     private String username;
     private String password;
@@ -9,7 +9,7 @@ public class UserBindingModel {
         return username;
     }
 
-    public UserBindingModel setUsername(String username) {
+    public UserLoginBindingModel setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -18,7 +18,7 @@ public class UserBindingModel {
         return password;
     }
 
-    public UserBindingModel setPassword(String password) {
+    public UserLoginBindingModel setPassword(String password) {
         this.password = password;
         return this;
     }

@@ -3,10 +3,12 @@ package mobilelele.mobilelele.service.impl;
 import mobilelele.mobilelele.model.entity.User;
 import mobilelele.mobilelele.model.entity.UserRole;
 import mobilelele.mobilelele.model.entity.enums.Role;
-import mobilelele.mobilelele.model.service.UserServiceModel;
+import mobilelele.mobilelele.model.service.UserLoginServiceModel;
+import mobilelele.mobilelele.model.service.UserRegisterServiceModel;
 import mobilelele.mobilelele.repository.UserRepository;
 import mobilelele.mobilelele.repository.UserRoleRepository;
 import mobilelele.mobilelele.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +21,50 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public boolean login(UserLoginServiceModel userLoginServiceModel) {
+        Optional<User> user = userRepository.findByUsername(userLoginServiceModel.getUsername());
+        boolean loginSuccessful = false;
+
+        if (user.isPresent()) {
+            loginSuccessful = passwordEncoder.matches(userLoginServiceModel.getPassword(), user.get().getPassword());
+        }
+        return loginSuccessful;
+    }
+
+    @Override
+    public boolean registerUser(UserRegisterServiceModel userRegisterServiceModel) {
+        Optional<User> existingUser = userRepository.findByUsername(userRegisterServiceModel.getUsername());
+
+        if (existingUser.isPresent()) {
+            return false;
+        }
+        Optional<UserRole> userRole = userRoleRepository.findByRole(Role.USER);
+        User userToRegister = modelMapper.map(userRegisterServiceModel, User.class);
+
+        userToRegister
+                .setPassword(passwordEncoder.encode(userToRegister.getPassword()))
+                .setActive(true)
+                .setRoles(List.of(userRole.get()));
+
+        userRepository.save(userToRegister);
+
+        return true;
     }
 
     @Override
     public void initializeUsersAndRoles() {
         initializeRoles();
         initializeUsers();
-    }
-
-    @Override
-    public boolean login(UserServiceModel userServiceModel) {
-        Optional<User> user = userRepository.findByUsername(userServiceModel.getUsername());
-
-        return user.isPresent();
     }
 
     private void initializeUsers() {

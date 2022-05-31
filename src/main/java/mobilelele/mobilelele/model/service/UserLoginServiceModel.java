@@ -1,8 +1,6 @@
 package mobilelele.mobilelele.model.service;
 
-import mobilelele.mobilelele.model.binding.UserBindingModel;
-
-public class UserServiceModel {
+public class UserLoginServiceModel {
 
     private String username;
     private String password;
@@ -11,7 +9,7 @@ public class UserServiceModel {
         return username;
     }
 
-    public UserServiceModel setUsername(String username) {
+    public UserLoginServiceModel setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -20,7 +18,7 @@ public class UserServiceModel {
         return password;
     }
 
-    public UserServiceModel setPassword(String password) {
+    public UserLoginServiceModel setPassword(String password) {
         this.password = password;
         return this;
     }

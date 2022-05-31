@@ -1,11 +1,12 @@
 package mobilelele.mobilelele.web;
 
-import mobilelele.mobilelele.model.binding.UserBindingModel;
-import mobilelele.mobilelele.model.service.UserServiceModel;
+import mobilelele.mobilelele.model.binding.UserLoginBindingModel;
+import mobilelele.mobilelele.model.binding.UserRegisterBindingModel;
+import mobilelele.mobilelele.model.service.UserLoginServiceModel;
+import mobilelele.mobilelele.model.service.UserRegisterServiceModel;
 import mobilelele.mobilelele.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,19 +33,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginSubmit(UserBindingModel userBindingModel,
+    public String loginSubmit(UserLoginBindingModel userLoginBindingModel,
                               BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userBindingModel", userBindingModel);
-
+            redirectAttributes.addFlashAttribute("userBindingModel", userLoginBindingModel);
+            //TODO: handle errors in template
             return "redirect:login";
         }
 
         boolean isUserPresent =
-                userService.login(modelMapper.map(userBindingModel, UserServiceModel.class));
+                userService.login(modelMapper.map(userLoginBindingModel, UserLoginServiceModel.class));
 
-        System.out.println(userBindingModel.getUsername());
 
         return isUserPresent ? "redirect:/" : "redirect:login";
     }
@@ -54,5 +54,21 @@ public class UserController {
         modelAndView.setViewName("auth-register");
 
         return modelAndView;
+    }
+
+    @PostMapping("/register")
+    public String registerSubmit(UserRegisterBindingModel userRegisterBindingModel,
+                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
+            //TODO: handle errors in template
+            return "redirect:register";
+        }
+
+        boolean registerSuccess =
+                userService.registerUser(modelMapper.map(userRegisterBindingModel, UserRegisterServiceModel.class));
+
+        return registerSuccess ? "redirect:login" : "redirect:register";
     }
 }
