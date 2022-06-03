@@ -71,4 +71,11 @@ public class UserController {
 
         return registerSuccess ? "redirect:login" : "redirect:register";
     }
+
+    @GetMapping("/logout")
+    public ModelAndView logout(ModelAndView modelAndView) {
+        userService.logout();
+        modelAndView.setViewName("index");
+        return modelAndView;
+    }
 }

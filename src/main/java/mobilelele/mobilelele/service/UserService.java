@@ -6,6 +6,8 @@ import mobilelele.mobilelele.model.service.UserRegisterServiceModel;
 
 public interface UserService {
 
+    void logout();
+
     void initializeUsersAndRoles();
 
     boolean login(UserLoginServiceModel userLoginServiceModel);

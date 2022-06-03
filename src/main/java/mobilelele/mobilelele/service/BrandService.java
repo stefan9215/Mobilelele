@@ -9,4 +9,5 @@ public interface BrandService {
     void initializeBrands();
 
     List<BrandViewModel> getAllBrands();
+
 }

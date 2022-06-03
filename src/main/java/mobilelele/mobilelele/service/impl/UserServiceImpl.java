@@ -8,6 +8,7 @@ import mobilelele.mobilelele.model.service.UserRegisterServiceModel;
 import mobilelele.mobilelele.repository.UserRepository;
 import mobilelele.mobilelele.repository.UserRoleRepository;
 import mobilelele.mobilelele.service.UserService;
+import mobilelele.mobilelele.user.CurrentUser;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+    private final CurrentUser currentUser;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, CurrentUser currentUser, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.currentUser = currentUser;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
@@ -37,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
         if (user.isPresent()) {
             loginSuccessful = passwordEncoder.matches(userLoginServiceModel.getPassword(), user.get().getPassword());
+            currentUser
+                    .setName(user.get().getFirstName() + " " + user.get().getLastName())
+                    .setLoggedIn(true);
         }
         return loginSuccessful;
     }
@@ -59,6 +65,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userToRegister);
 
         return true;
+    }
+
+    @Override
+    public void logout() {
+        currentUser.clear();
     }
 
     @Override
